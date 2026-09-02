@@ -1,4 +1,4 @@
- <<'EOF'
+
 # Ad Delivery Troubleshooting Lab
 
 A hands-on technical troubleshooting project demonstrating the fundamentals of publisher-side ad delivery, header bidding, JavaScript debugging, DOM/CSS validation, auction timeouts, ad-server targeting, and ad rendering.
