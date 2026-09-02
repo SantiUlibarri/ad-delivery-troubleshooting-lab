@@ -68,64 +68,83 @@ console.table(bidders);
 
 function runAuction() {
 
+    const AUCTION_TIMEOUT = 800;
+
     console.log("=================================");
     console.log("HEADER BIDDING AUCTION STARTED");
     console.log("=================================");
 
+    const auctionStart = performance.now();
 
-    const auctionStart =
-        performance.now();
+    const bidPromises = bidders.map(function(bidder) {
 
+        return new Promise(function(resolve) {
 
-    const bidPromises =
-        bidders.map(function(bidder) {
+            setTimeout(function() {
 
-            return new Promise(function(resolve) {
+                const bid = {
+                    bidder: bidder.name,
+                    cpm: bidder.cpm,
+                    responseTime: bidder.responseTime
+                };
 
-                setTimeout(function() {
-
-                    const bid = {
-                        bidder: bidder.name,
-                        cpm: bidder.cpm,
-                        responseTime: bidder.responseTime
-                    };
-
-
-                    console.log(
-                        `${bidder.name} responded with €${bidder.cpm} CPM`
-                    );
-
-
-                    resolve(bid);
-
-                }, bidder.responseTime);
-
-            });
-
-        });
-
-    return Promise.all(bidPromises)
-        .then(function(bids) {
-
-            const auctionDuration =
-                Math.round(
-                    performance.now() - auctionStart
+                console.log(
+                    `${bidder.name} responded with €${bidder.cpm} CPM`
                 );
 
+                resolve(bid);
 
-            console.log(
-                `Auction completed in ${auctionDuration}ms`
-            );
-
-
-            console.log("Received bids:");
-            console.table(bids);
-
-
-            return bids;
+            }, bidder.responseTime);
 
         });
 
+    });
+
+    return Promise.all(
+        bidPromises.map(function(promise, index) {
+
+            return Promise.race([
+
+                promise,
+
+                new Promise(function(resolve) {
+
+                    setTimeout(function() {
+
+                        resolve(null);
+
+                    }, AUCTION_TIMEOUT);
+
+                })
+
+            ]);
+
+        })
+
+    )
+    .then(function(results) {
+
+        const bids = results.filter(function(bid) {
+
+            return bid !== null;
+
+        });
+
+        const auctionDuration =
+            Math.round(
+                performance.now() - auctionStart
+            );
+
+        console.log(
+            `Auction completed in ${auctionDuration}ms`
+        );
+
+        console.log("Valid bids before timeout:");
+
+        console.table(bids);
+
+        return bids;
+    });
 }
 
 runAuction()
@@ -140,6 +159,15 @@ runAuction()
             "selected winner:",
             winner  
         );
+
+        const targeting =
+    buildAdServerTargeting(winner);
+renderAd(winner);
+
+console.log(
+    "Final targeting:",
+    targeting
+);
 
     });
 
@@ -183,4 +211,66 @@ runAuction()
 
 
     return winningBid;
+}
+
+function buildAdServerTargeting(winningBid) {
+
+    if (!winningBid) {
+
+        console.warn("No winning bid. No ad-server targeting created.");
+
+        return null;
+    }
+
+    const targeting = {
+        hb_bidder: winningBid.bidder,
+        hb_cpm: winningBid.cpm.toFixed(2),
+        hb_adid: `${winningBid.bidder}-${Date.now()}`
+    };
+
+    console.log("Ad-server targeting generated:");
+    console.table(targeting);
+
+    return targeting;
+}
+
+function renderAd(winningBid) {
+
+    if (!winningBid) {
+
+        console.warn("No winning bid. Ad will not render.");
+
+        return;
+    }
+
+    const adElement =
+        document.getElementById("ad-top");
+
+    if (!adElement) {
+
+        console.error(
+            "Ad rendering failed: ad-top element not found."
+        );
+
+        return;
+    }
+
+    adElement.innerHTML = `
+        <div style="
+            width:100%;
+            height:90px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#ddd;
+            border:1px solid #999;
+            font-family:Arial,sans-serif;
+        ">
+            Simulated Ad — ${winningBid.bidder} — €${winningBid.cpm.toFixed(2)} CPM
+        </div>
+    `;
+
+    console.log(
+        `Ad rendered successfully using ${winningBid.bidder}`
+    );
 }
