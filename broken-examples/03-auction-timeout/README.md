@@ -1,16 +1,28 @@
 # Case 3 — Auction Timeout
 
 ## Symptom
-A previously strong bidder stops contributing to auctions.
+
+A bidder that previously participated in the auction is no longer contributing bids.
 
 ## Investigation
-Compare bidder response times with the configured auction timeout.
 
-## Root Cause
-The bidder responds after the timeout and therefore does not participate in the completed auction.
+Compare the bidder's response time with the configured auction timeout.
 
-## Fix
-Evaluate bidder latency and determine whether the timeout should be adjusted.
+Example:
 
-## TAM Lesson
-Timeout optimization requires balancing revenue opportunity against page performance and user experience.
+```text
+Auction timeout: 500 ms
+Bidder response: 700 ms
+```
+
+Root Cause
+
+The bidder responds after the auction timeout and therefore misses the completed auction.
+
+Fix
+
+Evaluate bidder latency and determine whether the timeout configuration should be adjusted.
+
+TAM Lesson
+
+Auction timeouts require balancing additional bidding opportunities against page performance and latency.
