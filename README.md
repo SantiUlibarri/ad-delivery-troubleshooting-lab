@@ -69,6 +69,7 @@ The simulated system follows this simplified publisher-side flow:
                            v
                          USER
 
+```
 ## What I Built
 
 This project was developed in stages to simulate the main components of a publisher-side ad delivery system.
@@ -81,9 +82,9 @@ Each placement has a unique ID and an expected ad size.
 
 For example:
 
-- `ad-top` — 728 × 90
-- `ad-content` — 300 × 250
-- `ad-sidebar` — 300 × 250
+* `ad-top` — 728 × 90
+* `ad-content` — 300 × 250
+* `ad-sidebar` — 300 × 250
 
 The purpose of this stage was to establish the inventory that the simulated ad-delivery system would operate on.
 
@@ -95,6 +96,7 @@ For example:
 
 ```javascript
 document.getElementById(slot.code)
+```
 
 If the element exists, the system reports that the ad slot was found.
 
@@ -134,6 +136,8 @@ With a 500 ms timeout:
 Bidder C → 300 ms → participates
 Bidder A → 400 ms → participates
 Bidder B → 700 ms → too late
+```
+
 This demonstrates the trade-off between allowing more bidders to participate and maintaining page performance.
 
 A longer timeout may allow additional bids to compete, but it can also increase latency.
@@ -142,10 +146,10 @@ A longer timeout may allow additional bids to compete, but it can also increase 
 
 The project also documents several intentionally broken scenarios:
 
-- Hidden ad slot
-- JavaScript runtime error
-- Auction timeout
-- Network failure
+* Hidden ad slot
+* JavaScript runtime error
+* Auction timeout
+* Network failure
 
 Each scenario includes:
 
@@ -171,11 +175,11 @@ First, determine whether the problem can be reproduced.
 
 Questions to ask:
 
-- Does the issue occur consistently?
-- Does it affect one page or multiple pages?
-- Does it affect one ad placement or multiple placements?
-- Does it affect desktop, mobile, or both?
-- Does the problem affect all impressions or only some impressions?
+* Does the issue occur consistently?
+* Does it affect one page or multiple pages?
+* Does it affect one ad placement or multiple placements?
+* Does it affect desktop, mobile, or both?
+* Does the problem affect all impressions or only some impressions?
 
 The goal is to establish the scope of the problem before investigating individual components.
 
@@ -187,6 +191,7 @@ For example:
 
 ```javascript
 document.getElementById("ad-sidebar")
+```
 
 If this returns `null`, the expected element does not exist in the DOM.
 
@@ -202,7 +207,6 @@ Useful checks include:
 document.getElementById("ad-sidebar").offsetWidth
 document.getElementById("ad-sidebar").offsetHeight
 ```
-
 An element can exist in the DOM while having zero width or height.
 
 I would also inspect the element in DevTools to check for:
@@ -656,7 +660,7 @@ Winning Bid
       |
       v
 Ad Server
-
+```
 The project simulates this process with JavaScript rather than using the actual Prebid.js library.
 The simulated bidders represent the concept of multiple demand partners competing for an impression.
 
@@ -861,7 +865,7 @@ Ad Server
 Creative
  ↓
 Rendering
-
+```
 ## Conclusion
 
 This project demonstrates a practical approach to understanding and troubleshooting publisher-side ad delivery. By building the system from the webpage and ad slots upward, I was able to explore how HTML, CSS, JavaScript, asynchronous auctions, bidder latency, timeouts, targeting, and rendering interact within an advertising workflow.
