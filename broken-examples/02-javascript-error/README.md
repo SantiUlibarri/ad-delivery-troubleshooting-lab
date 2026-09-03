@@ -1,16 +1,28 @@
 # Case 2 — JavaScript Runtime Error
 
 ## Symptom
-The page loads, but the header-bidding auction never starts.
+
+The publisher page loads, but the header-bidding auction does not start.
 
 ## Investigation
-Open DevTools → Console and look for JavaScript exceptions.
+
+Open DevTools → Console and look for JavaScript errors.
+
+Check:
+
+- The error message
+- The source file
+- The line where the error occurred
+- Whether the error happens before auction initialization
 
 ## Root Cause
-A runtime JavaScript error stops auction execution.
+
+A JavaScript runtime error interrupts execution before the auction can complete.
 
 ## Fix
-Identify the source file and line number, correct the invalid reference, and reload the page.
+
+Correct the JavaScript error and reload the page to confirm that the auction initializes successfully.
 
 ## TAM Lesson
-A JavaScript failure can interrupt the entire ad-delivery chain even when the HTML and CSS are working correctly.
+
+A JavaScript error can prevent ad delivery before any bidder or ad-server request occurs.
