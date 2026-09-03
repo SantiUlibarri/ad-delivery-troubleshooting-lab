@@ -3,7 +3,6 @@
 
 ### `broken-examples/04-network-failure/README.md`
 
-```markdown
 # Case 4 — Network Failure
 
 ## Symptom
