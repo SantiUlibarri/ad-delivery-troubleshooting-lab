@@ -1,7 +1,4 @@
 
----
-
-### `broken-examples/04-network-failure/README.md`
 
 # Case 4 — Network Failure
 
